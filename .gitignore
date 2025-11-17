@@ -1,1 +1,21 @@
+# macOS system files
+.DS_Store
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# VS Code working directory
+.vscode/
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Ignore personal/API key files
 api_key.txt
+
+# Ignore specific files you don't want in repo
+BPMN.png
+
+# Ignore this project folder
+Open Refine Lab/
