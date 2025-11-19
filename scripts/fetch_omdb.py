@@ -5,7 +5,7 @@ import pandas as pd
 from pathlib import Path
 
 # ----- Load API key (reuses your existing pattern) -----
-KEY_CANDIDATES = ["api_key", "api_key.txt", "omdb_apikey.txt"]
+KEY_CANDIDATES = ["api_key", "api_key.txt", "omdb_apikey.txt", "Daniel_API_key.txt"]
 key_path = next((Path(p) for p in KEY_CANDIDATES if Path(p).exists()), None)
 
 if key_path is None:
@@ -44,7 +44,7 @@ def omdb_by_id(imdb_id: str) -> dict:
 def main():
     # Load the list of IDs created by clean_netflix.py
     ids_df = pd.read_csv(IDS_PATH)
-    imdb_ids = ids_df["imdb_id"].astype(str).tolist()[:25]
+    imdb_ids = ids_df["imdb_id"].astype(str).tolist()[:200]
     print(f"Loaded {len(imdb_ids)} IMDb IDs from {IDS_PATH}")
 
     results = []
