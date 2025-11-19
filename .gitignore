@@ -12,7 +12,10 @@ __pycache__/
 *.pyc
 
 # Ignore personal/API key files
+#Adams
 api_key.txt
+#Daniel
+Daniel_API_key.txt
 
 # Ignore specific files you don't want in repo
 BPMN.png
