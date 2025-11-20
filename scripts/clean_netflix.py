@@ -11,7 +11,7 @@ def main():
     df = pd.read_csv(RAW_PATH)
     print("Raw shape:", df.shape)
 
-    # OPTIONAL: filter only movies (recommended for your project)
+    # OPTIONAL: filter only movies
     if "type" in df.columns:
         df = df[df["type"].str.lower() == "movie"].copy()
         print("After filtering to movies:", df.shape)
