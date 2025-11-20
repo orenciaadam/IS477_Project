@@ -45,31 +45,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-def extract_minutes(x):
-    if pd.isna(x):
-        return np.nan
-    m = re.findall(r"\d+", str(x))
-    return int(m[0]) if m else np.nan
-
-merged["omdb_runtime_min"] = merged["Runtime"].apply(extract_minutes)
-
-
-merged["runtime_min"] = merged["omdb_runtime_min"].fillna(merged["runtime"])
-
-null_rates = merged[["Awards", "Metascore"]].isna().mean()
-print("Null Rates:")
-print(null_rates)
-
-#cleaned dataset
-clean = merged[
-    [
-        "id", "title_unified", "type", "release_year_clean",
-        "age_certification", "runtime_min", "Genre", "Language",
-        "Country", "Awards", "BoxOffice", "Director", "Writer",
-        "Actors", "Plot"
-    ]
-]
-
-clean.head()
