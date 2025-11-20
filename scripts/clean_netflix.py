@@ -1,5 +1,7 @@
 import pandas as pd
 from pathlib import Path
+import re
+import numpy as np
 
 # Paths
 RAW_PATH = Path("data/raw/Netflix_TV_Shows_and_Movies.csv")
@@ -11,7 +13,7 @@ def main():
     df = pd.read_csv(RAW_PATH)
     print("Raw shape:", df.shape)
 
-    # OPTIONAL: filter only movies
+    # OPTIONAL: filter only movies 
     if "type" in df.columns:
         df = df[df["type"].str.lower() == "movie"].copy()
         print("After filtering to movies:", df.shape)
@@ -43,3 +45,31 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+def extract_minutes(x):
+    if pd.isna(x):
+        return np.nan
+    m = re.findall(r"\d+", str(x))
+    return int(m[0]) if m else np.nan
+
+merged["omdb_runtime_min"] = merged["Runtime"].apply(extract_minutes)
+
+
+merged["runtime_min"] = merged["omdb_runtime_min"].fillna(merged["runtime"])
+
+null_rates = merged[["Awards", "Metascore"]].isna().mean()
+print("Null Rates:")
+print(null_rates)
+
+#cleaned dataset
+clean = merged[
+    [
+        "id", "title_unified", "type", "release_year_clean",
+        "age_certification", "runtime_min", "Genre", "Language",
+        "Country", "Awards", "BoxOffice", "Director", "Writer",
+        "Actors", "Plot"
+    ]
+]
+
+clean.head()
