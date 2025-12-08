@@ -4,7 +4,10 @@ import requests
 import pandas as pd
 from pathlib import Path
 
+# ---------------------------------------------------------
 # Load API key
+# ---------------------------------------------------------
+
 KEY_CANDIDATES = ["api_key", "api_key.txt", "omdb_apikey.txt", "Daniel_API_key.txt"]
 key_path = next((Path(p) for p in KEY_CANDIDATES if Path(p).exists()), None)
 
@@ -20,67 +23,92 @@ if not OMDB_KEY or "REPLACE" in OMDB_KEY:
 
 print(f"Loaded OMDb key from {key_path}")
 
+# ---------------------------------------------------------
+# Paths
+# ---------------------------------------------------------
+
 IDS_PATH = Path("data/processed/netflix_imdb_ids.csv")
 RAW_JSON = Path("data/raw/omdb_raw.jsonl")
 OUT_CSV  = Path("data/processed/omdb_from_netflix.csv")
 
-# Which fields to keep from OMDb
+# Fields to keep from OMDb
 KEEP = [
     "Title","Year","Rated","Released","Runtime","Genre","Director","Writer","Actors",
     "Plot","Language","Country","Awards","Poster","Ratings","Metascore","imdbRating",
     "imdbVotes","imdbID","Type","DVD","BoxOffice","Production","Website"
 ]
 
+# ---------------------------------------------------------
+# Fetch a single OMDb entry
+# ---------------------------------------------------------
+
 def omdb_by_id(imdb_id: str) -> dict:
-    """Fetch a single title from OMDb by IMDb ID."""
     url = "http://www.omdbapi.com/"
     params = {"apikey": OMDB_KEY, "i": imdb_id, "r": "json"}
     r = requests.get(url, params=params, timeout=15)
     data = r.json()
-    data["imdb_id"] = imdb_id 
+    data["imdb_id"] = imdb_id
     return data
 
+# ---------------------------------------------------------
+# Main pipeline
+# ---------------------------------------------------------
+
 def main():
-    # Load the list of IDs created by clean_netflix.py
+
+    # Load cleaned list of IDs
     ids_df = pd.read_csv(IDS_PATH)
-    imdb_ids = ids_df["imdb_id"].astype(str).tolist()[:200]
-    print(f"Loaded {len(imdb_ids)} IMDb IDs from {IDS_PATH}")
+    print("Full imdb_id file shape:", ids_df.shape)
+
+    MAX_TITLES = 500
+
+    all_ids = ids_df["imdb_id"].astype(str).tolist()
+    imdb_ids = all_ids[:MAX_TITLES]
+
+    print(f"Loaded {len(imdb_ids)} IMDb IDs from {IDS_PATH} (cap={MAX_TITLES})")
 
     results = []
     RAW_JSON.parent.mkdir(parents=True, exist_ok=True)
 
+    # Write raw JSONL for provenance
     with RAW_JSON.open("w", encoding="utf-8") as f_raw:
         for i, imdb_id in enumerate(imdb_ids, start=1):
+
             try:
                 data = omdb_by_id(imdb_id)
 
-                # Detect OMDb daily limit and stop early
+                # Detect daily limit
                 if data.get("Error") == "Request limit reached!":
-                    print(f"Hit daily OMDb request limit at ID #{i} ({imdb_id}). Stopping early.")
+                    print(f"Hit OMDb request limit at index #{i} ({imdb_id}). Stopping early.")
                     break
 
-                # Write raw JSON line for provenance
+                # Save raw record
                 f_raw.write(json.dumps(data) + "\n")
 
+                # Extract fields if successful
                 if data.get("Response") == "True":
                     subset = {k: data.get(k) for k in KEEP}
                     subset["imdb_id"] = imdb_id
                     results.append(subset)
                 else:
                     print(f"[{i}] {imdb_id}: OMDb error = {data.get('Error')}")
-            except Exception as e:
-                print(f"[{i}] {imdb_id}: Exception {e}")
 
-            # Needed to avoid throttling
+            except Exception as e:
+                print(f"[{i}] {imdb_id}: Exception occurred → {e}")
+
+            # Sleep to avoid rate limiting
             time.sleep(0.25)
 
             if i % 50 == 0:
                 print(f"...fetched {i} titles so far")
 
+    # Save processed CSV
     omdb_df = pd.DataFrame(results)
     OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
     omdb_df.to_csv(OUT_CSV, index=False)
+
     print(f"Saved {len(omdb_df)} OMDb rows to: {OUT_CSV}")
+
 
 if __name__ == "__main__":
     main()
