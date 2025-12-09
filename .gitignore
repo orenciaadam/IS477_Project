@@ -14,14 +14,20 @@ __pycache__/
 # Ignore personal/API key files
 #Adams
 api_key.txt
+api_key
+omdb_apikey.txt
 #Daniel
 Daniel_API_key.txt
 
-# Ignore specific files you don't want in repo
+# files
 BPMN.png
 
-# Ignore this project folder
+
 Open Refine Lab/
 
 Primary_Key.ipynb_checkpoints
 
+
+
+# Snakemake
+.snakemake/
