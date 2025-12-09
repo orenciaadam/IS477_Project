@@ -1,0 +1,34 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                   count
+------------------  -------
+all                       1
+analyze_and_plot          1
+merge_netflix_omdb        1
+total                     3
+
+Select jobs to execute...
+
+[Tue Dec  9 14:51:57 2025]
+rule merge_netflix_omdb:
+    input: data/processed/netflix_clean.csv, data/processed/omdb_clean.csv
+    output: data/processed/netflix_omdb_merged.csv, results/integration_summary.csv
+    jobid: 4
+    reason: Updated input files: data/processed/netflix_clean.csv
+    resources: tmpdir=/var/folders/91/xw1gqkcd1_57_3cqpdw43dmc0000gn/T
+
+[Tue Dec  9 14:51:57 2025]
+Error in rule merge_netflix_omdb:
+    jobid: 4
+    input: data/processed/netflix_clean.csv, data/processed/omdb_clean.csv
+    output: data/processed/netflix_omdb_merged.csv, results/integration_summary.csv
+    shell:
+        python scripts/04_merge_netflix_omdb.py
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2025-12-09T145157.706535.snakemake.log

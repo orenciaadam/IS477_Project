@@ -23,10 +23,18 @@ import json
 import requests
 import pandas as pd
 from pathlib import Path
+import hashlib
 
 # ---------------------------------------------------------
 # Load API key
 
+def compute_sha256(filepath):
+    """Compute SHA-256 checksum of a file."""
+    sha256 = hashlib.sha256()
+    with open(filepath, 'rb') as f:
+        for chunk in iter(lambda: f.read(4096), b''):
+            sha256.update(chunk)
+    return sha256.hexdigest()
 
 KEY_CANDIDATES = ["api_key", "api_key.txt", "omdb_apikey.txt", "Daniel_API_key.txt"]
 key_path = next((Path(p) for p in KEY_CANDIDATES if Path(p).exists()), None)
@@ -75,6 +83,28 @@ def omdb_by_id(imdb_id: str) -> dict:
 
 
 def main():
+
+    # Skip API if raw JSONL already exists
+    if RAW_JSON.exists():
+        print(f"OMDb raw data already exists at {RAW_JSON}")
+        print("Rebuilding CSV from existing JSONL to avoid API calls...")
+        
+        # Rebuild CSV from JSONL
+        results = []
+        with RAW_JSON.open("r", encoding="utf-8") as f:
+            for line in f:
+                data = json.loads(line)
+                if data.get("Response") == "True":
+                    subset = {k: data.get(k) for k in KEEP}
+                    subset["imdb_id"] = data.get("imdb_id")
+                    results.append(subset)
+        
+        omdb_df = pd.DataFrame(results)
+        OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
+        omdb_df.to_csv(OUT_CSV, index=False)
+        print(f"Rebuilt {len(omdb_df)} rows in {OUT_CSV}")
+        return
+    
 
     # Load cleaned list of IDs
     ids_df = pd.read_csv(IDS_PATH)
@@ -128,6 +158,17 @@ def main():
     omdb_df.to_csv(OUT_CSV, index=False)
 
     print(f"Saved {len(omdb_df)} OMDb rows to: {OUT_CSV}")
+
+    # Compute checksum for raw OMDb data
+    print("Computing SHA-256 checksum for raw OMDb data...")
+    checksum = compute_sha256(RAW_JSON)
+    print(f"OMDb raw JSONL SHA-256: {checksum}")
+    
+    # add checksums file
+    checksum_file = Path("results/checksums.txt")
+    with checksum_file.open("a") as f:  
+        f.write(f"omdb_raw.jsonl: {checksum}\n")
+    print(f"Appended checksum to: {checksum_file}")
 
 
 if __name__ == "__main__":

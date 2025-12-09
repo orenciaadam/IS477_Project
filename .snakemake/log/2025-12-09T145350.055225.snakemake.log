@@ -1,0 +1,51 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                   count
+------------------  -------
+all                       1
+analyze_and_plot          1
+merge_netflix_omdb        1
+total                     3
+
+Select jobs to execute...
+
+[Tue Dec  9 14:53:50 2025]
+rule merge_netflix_omdb:
+    input: data/processed/netflix_clean.csv, data/processed/omdb_clean.csv
+    output: data/processed/netflix_omdb_merged.csv, results/integration_summary.csv
+    jobid: 4
+    reason: Missing output files: data/processed/netflix_omdb_merged.csv, results/integration_summary.csv; Updated input files: data/processed/omdb_clean.csv, data/processed/netflix_clean.csv
+    resources: tmpdir=/var/folders/91/xw1gqkcd1_57_3cqpdw43dmc0000gn/T
+
+[Tue Dec  9 14:53:50 2025]
+Finished job 4.
+1 of 3 steps (33%) done
+Select jobs to execute...
+
+[Tue Dec  9 14:53:50 2025]
+rule analyze_and_plot:
+    input: data/processed/netflix_omdb_merged.csv
+    output: results/summary_stats.csv, results/correlation_matrix.csv, results/award_rating_summary.csv, results/rating_by_decade.csv, figures/runtime_vs_rating.png, figures/votes_vs_rating.png, figures/metascore_vs_rating.png, figures/rating_histogram.png, figures/rating_by_decade.png
+    jobid: 5
+    reason: Missing output files: figures/rating_by_decade.png, results/award_rating_summary.csv, results/rating_by_decade.csv, figures/metascore_vs_rating.png, results/summary_stats.csv, results/correlation_matrix.csv, figures/rating_histogram.png; Input files updated by another job: data/processed/netflix_omdb_merged.csv
+    resources: tmpdir=/var/folders/91/xw1gqkcd1_57_3cqpdw43dmc0000gn/T
+
+[Tue Dec  9 14:53:51 2025]
+Finished job 5.
+2 of 3 steps (67%) done
+Select jobs to execute...
+
+[Tue Dec  9 14:53:51 2025]
+localrule all:
+    input: data/processed/netflix_clean.csv, data/processed/netflix_imdb_ids.csv, data/processed/omdb_clean.csv, data/processed/netflix_omdb_merged.csv, results/netflix_missingness.csv, results/omdb_missingness.csv, results/integration_summary.csv, results/summary_stats.csv, results/correlation_matrix.csv, results/award_rating_summary.csv, results/rating_by_decade.csv, figures/runtime_vs_rating.png, figures/votes_vs_rating.png, figures/metascore_vs_rating.png, figures/rating_histogram.png, figures/rating_by_decade.png
+    jobid: 0
+    reason: Input files updated by another job: figures/rating_by_decade.png, data/processed/netflix_omdb_merged.csv, figures/votes_vs_rating.png, results/integration_summary.csv, results/award_rating_summary.csv, figures/runtime_vs_rating.png, results/rating_by_decade.csv, figures/metascore_vs_rating.png, results/summary_stats.csv, results/correlation_matrix.csv, figures/rating_histogram.png
+    resources: tmpdir=/var/folders/91/xw1gqkcd1_57_3cqpdw43dmc0000gn/T
+
+[Tue Dec  9 14:53:51 2025]
+Finished job 0.
+3 of 3 steps (100%) done
+Complete log: .snakemake/log/2025-12-09T145350.055225.snakemake.log

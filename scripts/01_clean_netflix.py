@@ -15,6 +15,15 @@ Purpose:
 
 import pandas as pd
 from pathlib import Path
+import hashlib
+
+def compute_sha256(filepath):
+    """Compute SHA-256"""
+    sha256 = hashlib.sha256()
+    with open(filepath, 'rb') as f:
+        for chunk in iter(lambda: f.read(4096), b''):
+            sha256.update(chunk)
+    return sha256.hexdigest()
 
 # paths
 RAW_PATH      = Path("data/raw/Netflix_TV_Shows_and_Movies.csv")
@@ -28,6 +37,19 @@ def main():
     print("=== 01: CLEAN NETFLIX DATA ===")
     print(f"Loading raw Netflix file from: {RAW_PATH}")
     df = pd.read_csv(RAW_PATH)
+
+    # Compute and save checksum for data integrity
+    print("Computing SHA-256 checksum for raw Netflix data...")
+    checksum = compute_sha256(RAW_PATH)
+    print(f"Netflix CSV SHA-256: {checksum}")
+    
+    # Save checksum to results
+    checksum_file = RESULTS_DIR / "checksums.txt"
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    with checksum_file.open("w") as f:
+        f.write(f"Netflix_TV_Shows_and_Movies.csv: {checksum}\n")
+    print(f"Saved checksum to: {checksum_file}")
+
     print("Raw shape:", df.shape)
 
     # Filter to movies
