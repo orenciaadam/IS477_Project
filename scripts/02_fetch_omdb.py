@@ -1,3 +1,23 @@
+"""
+fetch_omdb.py
+
+Purpose:
+    - Programmatically acquire OMDb movie metadata for IMDb IDs derived from the Netflix dataset.
+    - This script requires an OMDb API key. Users must create their own key at:
+          https://www.omdbapi.com/apikey.aspx
+    - The script searches for a local file containing the API key (e.g., `api_key.txt`).
+
+Reproducibility notes:
+    - This script is designed to run automatically in our Snakemake workflow
+      *only if* the raw OMDb file (`data/raw/omdb_raw.jsonl`) does not exist.
+    - This prevents unnecessary API usage, respects OMDb rate limits, and allows others
+      to fully reproduce our data acquisition by simply providing their own API key.
+
+Outputs:
+    - data/raw/omdb_raw.jsonl   (raw JSON for provenance)
+    - data/processed/omdb_from_netflix.csv
+"""
+
 import time
 import json
 import requests
@@ -6,7 +26,7 @@ from pathlib import Path
 
 # ---------------------------------------------------------
 # Load API key
-# ---------------------------------------------------------
+
 
 KEY_CANDIDATES = ["api_key", "api_key.txt", "omdb_apikey.txt", "Daniel_API_key.txt"]
 key_path = next((Path(p) for p in KEY_CANDIDATES if Path(p).exists()), None)
@@ -25,7 +45,7 @@ print(f"Loaded OMDb key from {key_path}")
 
 # ---------------------------------------------------------
 # Paths
-# ---------------------------------------------------------
+
 
 IDS_PATH = Path("data/processed/netflix_imdb_ids.csv")
 RAW_JSON = Path("data/raw/omdb_raw.jsonl")
@@ -40,7 +60,7 @@ KEEP = [
 
 # ---------------------------------------------------------
 # Fetch a single OMDb entry
-# ---------------------------------------------------------
+
 
 def omdb_by_id(imdb_id: str) -> dict:
     url = "http://www.omdbapi.com/"
@@ -52,7 +72,7 @@ def omdb_by_id(imdb_id: str) -> dict:
 
 # ---------------------------------------------------------
 # Main pipeline
-# ---------------------------------------------------------
+
 
 def main():
 
@@ -85,7 +105,7 @@ def main():
                 # Save raw record
                 f_raw.write(json.dumps(data) + "\n")
 
-                # Extract fields if successful
+                # Extract if successful
                 if data.get("Response") == "True":
                     subset = {k: data.get(k) for k in KEEP}
                     subset["imdb_id"] = imdb_id

@@ -1,0 +1,7 @@
+metric,value
+n_netflix_clean,3407
+n_omdb_clean,500
+n_merged_inner,500
+n_ids_netflix_only,2907
+n_ids_omdb_only,0
+n_ids_intersection,500
