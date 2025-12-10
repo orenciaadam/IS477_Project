@@ -175,7 +175,9 @@ https://uofi.box.com/s/121cdhn03lrwwi73b2c0ewk2qnmwyick
 If these files are placed in data/raw/, data/processed/, and results/ using the existing structure, the workflow will detect omdb_raw.jsonl and skip all API requests, rebuilding the cleaned and merged outputs directly from the cached data. 
 We also computed the SHA-256 checksums. This is done to the raw files and then writes them to `results/checksums.txt`. 
 
-The ./run_all.sh script activates Snakemake and triggers every stage of the pipeline in order. It cleans the original Netflix dataset, pulls OMDb data if needed, parses and standardizes OMDb fields, merges the two datasets on imdb_id, performs quality checks, computes missing-value statistics, and generates all tables and visualizations used in the analysis. Outputs are stored in the results/ and figures/ folders, including summary statistics, correlation matrices, and plots
+The ./run_all.sh script activates Snakemake and triggers every stage of the pipeline in order. It cleans the original Netflix dataset, pulls OMDb data if needed, parses and standardizes OMDb fields, merges the two datasets on imdb_id, performs quality checks, computes missing-value statistics, and generates all tables and visualizations used in the analysis. Outputs are stored in the results/ and figures/ folders, including summary statistics, correlation matrices, and plots.
+
+
 ---
 
 ## References
