@@ -22,6 +22,13 @@ Daniel_API_key.txt
 # files
 BPMN.png
 
+# internally used notebooks
+Clean.ipynb
+omdb_request.ipynb
+Open_NTSM.ipynb
+Primary_key.ipynb
+
+
 
 Open Refine Lab/
 
