@@ -1,8 +1,8 @@
 # Factors Influencing IMDb Ratings of Netflix Movies
 
 ## Contributors
-- **Daniel Newman** 
-- **Adam Orencia**
+- Daniel Newman 
+- Adam Orencia
 
 ---
 
@@ -50,21 +50,21 @@ Overall, these two datasets, one static and manually collected, the other dynami
 
 ## Data Quality Assessment
 
-We conducted a full data quality assessment to truly understand the strengths and key limitations of the Netflix and OMDb datasets. We did this before integration and analysis to make sure we were collecting quality data around the analytics. This assessment focused on missing data. We also made sure to check for duplicate information. We also looked at type and format standardization and integration. The goal was to identify possible future issues that could affect our later analysis.
+We conducted a full data quality assessment to truly understand the strengths and key limitations of the Netflix and OMDb datasets. We did this before integration and analysis to make sure we were collecting quality data around the analytics. This assessment focused on missing data. We also made sure to check for duplicate information. We also looked at type and format standardization and integration. The goal was to identify possible future issues that could affect our later analysis. We did not describe the data here, as it was mentioned in the Data Profile above.
 
 ### Missingness Analysis
 
-When we looked into the quality of our data for missing values, we found a major difference between the two inputs. The Netflix data showed a relatively complete dataset, excluding the column of age certifications, where 61% were missing.
+When we looked into the quality of our data for missing values, we found a major difference between the two inputs. The Netflix data showed a relatively complete data set, excluding the column of age certifications, where 61% were missing.
 
-On the other hand, the OMDb dataset we saw large amounts of missing information and data fields. The large areas of missing data were the production at 99%, DVD date at 98%, BoxOffice at 54%, and Metascore at 57%. Even with this missing information, it was essential for modeling fields. The main data we leveraged were the IMDb rating, votes, runtime, and year, which were all relatively complete records that helped enrich the Netflix data.
+On the other hand, the OMDb data set we saw large amounts of missing information and data fields. The large areas of missing data were the production at 99%, DVD date at 98%, BoxOffice at 54%, and Metascore at 57%. Even with this missing information, it was essential for modeling fields. The main data we leveraged were the IMDb rating, votes, runtime, and year, which were all relatively complete records that helped enrich the Netflix data.
 
-**Missingness Profiles:**
+**Missing value profiles:**
 - [`results/netflix_missingness.csv`](results/netflix_missingness.csv)
 - [`results/omdb_missingness.csv`](results/omdb_missingness.csv)
 
 ### Duplicate Detection
 
-In terms of duplicate detection, `imdb_id` served as a reliable primary key and unique identifier, as each movie is given one individual `imdb_id`. This was true across both datasets, where the Netflix dataset contained no duplicate `imdb_id`. In the OMDb dataset, occasionally repeated records occurred when requests were retried or partially failed. This is not an issue with the data itself, but in the method of calling we used. These were handled during the cleaning and dropped by removing extra entries for any given ID.
+In terms of duplicate detection, `imdb_id` served as a reliable primary key and unique identifier, as each movie is given one individual `imdb_id`. This was true across both datasets, where the Netflix dataset contained no duplicate `imdb_id`. In the OMDb data set are occasionally repeated records when requests were retried or partially failed. This is not an issue with the data itself, but in the method of calling we used. These were handled during the cleaning and dropped by removing extra entries for any given ID.
 
 ### Type and Format Standardization
 
@@ -140,148 +140,50 @@ Overall, the strongest influences of higher IMDb ratings were Metascore, awards,
 
 ## Future Work
 
-In our project, we established a reproducible end-to-end workflow from data collection to analysis. Time limits meant we had some unavoidable limits related to the API. Because the free OMDb use is set to 1,000 requests each day, the final merged data was limited to 500 movies to stay within this limit when making our scripts. One useful thing to do later would be gathering more data by using a bigger API limit or a paid plan. This would help our study and let us look at more movies and acquire more representative data. It would also allow us to reduce the bias that comes from only taking the first 500 IMDb IDs. For example, a larger dataset might help smooth out trends as time passes, give better genre balance, and make the plots less noisy.
+In our project, we established a reproducible end-to-end workflow from data collection to analysis. Time limits meant we had some unavoidable limits related to the API. Because the free OMDb use is set to 1,000 requests each day, the final merged data was limited to 500 movies to stay within this limit when making our scripts. One useful thing to do later would be gathering more data by using a bigger API limit or a paid plan. This would help our study and let us look at more movies and acquire more representative data. It would also allow us to reduce the bias that comes from only taking the first 500 IMDb IDs. For example, a larger data set might help smooth out trends as time passes, give better genre balance, and make the plots less noisy.
 
-Future plans revolve around using more than just OMDb data. OMDb works well for getting basic info like ratings, runtimes, and genres, but it does limit how deep you can study some things and has obvious missing data (Metascore, Box Office, Production). Other movie sites like Rotten Tomatoes could fill the gap. Rotten Tomatoes, for example, has a way of measuring how critics disagree with the content. This would help us understand if they generally don't agree on how good Netflix movies are. Using more sources would also give us more practice with the main ideas of the class, such as combining data and matching schemas. We think it would be interesting but challenging to grow our system to balance data disagreements across APIs and other sources.
+Future plans revolve around using more than just OMDb data. OMDb works well for getting basic info like ratings, run times, and genres, but it does stop how deep you can study some things and has obvious missing data (Metascore, Box Office, Production). Other movie sites like Rotten Tomatoes could fill the gap. Rotten Tomatoes, for example, has a way of measuring how critics disagree with the content. This would help us understand if they generally don't agree on how good Netflix movies are. Using more sources would also give us more practice with the main ideas of the class, such as combining data and matching schemas. We think it would be interesting but hard to grow our system to balance data disagreements across APIs and other sources.
 
-If we grew the data, we could get more useful ideas from predictive models. Currently, our work only has descriptive analyses such as correlations, distributions, and decade trends. With a larger, fuller dataset, we could build regression or tree-based models to predict IMDb scores from movie features. We could learn which variables best indicate a higher score and see which things really matter: Do more famous actors improve ratings? Does length really matter? Are documentaries just always better? Models would also make us more careful about data quality. For example, filling in missing data, encoding genres, and dealing with skewed variables like vote count.
+If we grew the data, we could get more useful ideas from predictive models. Currently, our work only has descriptive analyses such as links, lists, and decade trends. With a larger, fuller data set, we could make regression or tree-based models to guess IMDb scores from good movie features. We could learn which variables best show a higher score and see which things really matter: Do more famous actors improve ratings? Does length really matter? Are documentaries just always better? Models would also make us more careful about data quality. For example, filling in missing data, coding genres, and dealing with changed variables like vote count.
 
-We also didn't get to study how to handle missing data systematically. Now, our system focuses more on understanding and cleaning than actually fixing what's missing. Because some OMDb fields are very incomplete, even simple imputation could let us do more studies. If we filled in Metascore, for example, we could add more movies to correlations or models instead of removing them.
+We also didn't get to study how to handle missing data. Now, our system focuses more on understanding and cleaning than actually fixing what's missing. Because some OMDb fields are very incomplete, even simple filling could let us do more studies. If we filled in Metascore, for example, we could add more movies to links or models instead of removing them.
 
-Another idea involves viewing ratings over time. IMDb scores are dynamic as they change based on viewership. Some movies flop initially but then grow to be classics in the future. A helpful metric would be understanding the change in the rating over time to see how a movie has aged. We didn't gather data that changes across time, but if we queried OMDb or TMDB consistently, we could curate a dataset that tracks how ratings change. It would also let us find out if movies get better-rated once they reach Netflix.
+Another idea involves viewing ratings over time. IMDb scores are dynamic as they change based on viewership. Some movies flop, but then grow to be classics in the future. A helpful metric would be understanding the change in the rating over time to see how a movie has aged. We didn't gather the data that changes across time, but if we checked OMDb or TMDB consistently, we could curate a data set that tracks how ratings change. It would also let us find out if movies get better once they reach Netflix.
 
-It would also be quite interesting to compare the Netflix selection to that of other platforms. Do Netflix users judge more harshly? Are Prime Video movies better rated? Is everything on Disney+ pretty much a 7 or 8 since everything is a superhero movie? This would need processes to grab data from many platforms, but it strongly connects to real-world streaming platform questions.
+It would also be quite interesting to compare the Netflix selection to that of other platforms. Do Netflix users judge more harshly? Are Prime Video movies better rated? Is everything on Disney+ pretty much a 7 or 8 since everything is a superhero movie? This would need processes to grab data from many platforms, but it strongly connects to real-world streaming plan questions.
 
-In general, the largest opportunity is not even about the study; it is about growing the system we have already made. The hardest part was creating the infrastructure. Now that the system is set, adding more data sources, doing deeper studies, or training models is very doable. The work could grow in several ways based on what questions we need to answer next.
+In general, the largest chance is not even about the study; it is about growing the system we have already made. The hardest part was creating the structure. Now that the system is set, adding more data sources, doing deeper studies, or training models is very doable. The work could grow in several ways based on what questions we need to answer next.
 
 ---
 
 ## Reproducing the Work
 
-To reproduce this project, follow these steps carefully:
+To reproduce this project, first clone the GitHub repository. Once downloaded, ensure the data structure matches GitHub and what we used during development. The repository contains scripts under the `scripts/` directory, the `data/` folder with `raw/` and `processed/` folders, the Snakefile, the `results/` and `figures/` folders, and the `run_all.sh` script that triggers the entire workflow.
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
-cd YOUR_REPO_NAME
-```
+Install the Python packages using `pip install -r requirements.txt`. We had dependency issues with pulp, so the `requirements.txt` file has the versions used with Snakemake locally. The `requirements_frozen.txt` file is also included, which has the exact versions from when we developed the project.
 
-### 2. Verify Directory Structure
+Since the OMDb data should not be redistributed, obtain your own OMDb API key. Navigate to https://www.omdbapi.com/apikey.aspx and request a free key. Use the key to create a text file named `api_key.txt` in the project root directory and paste the key. The script (`scripts/02_fetch_omdb.py`) searches for possible filenames, including `api_key.txt` (the ideal file name). The key should not be shared to GitHub and is ignored by `.gitignore`.
 
-Ensure your directory structure matches:
-```
-IS477/
-├── data/
-│   ├── raw/
-│   └── processed/
-├── scripts/
-├── results/
-├── figures/
-├── Snakefile
-├── run_all.sh
-├── requirements.txt
-└── README.md
-```
+To avoid making new API calls, download our processed data from the shared Box folder: **https://uofi.box.com/s/121cdhn03lrwwi73b2c0ewk2qnmwyick**
 
-### 3. Install Dependencies
+After downloading, place the raw OMDb JSONL file and the processed CSV files into the appropriate `data/raw/`, `data/processed/`, and `results/` directories. When `omdb_raw.jsonl` is found, the workflow will skip all requests and rebuild the merged data from the cached file. This allows reproducibility even when the API rate limits fetching the same metadata again.
 
-Install required Python packages:
-```bash
-pip install -r requirements.txt
-```
+The `./run_all.sh` script activates Snakemake. This command triggers every stage of the pipeline in order. It cleans the original Netflix dataset, then pulls OMDb data if needed, using the `imdb_id`. Next, it cleans the OMDb fields, merges the two datasets on `imdb_id`, performs quality checks, computes missing value statistics, and generates all tables and visualizations used in the analysis. Outputs are stored in the `results/` and `figures/` folders. This includes summary stats, correlation matrices, and plots.
 
-**Note:** We encountered dependency issues with PuLP and Snakemake, so `requirements.txt` specifies tested versions. For exact reproducibility, use:
-```bash
-pip install -r requirements_frozen.txt
-```
+We also computed the SHA-256 checksums. This is done to the raw files and then writes them to `results/checksums.txt`. This is to confirm that the raw data matches the version used in our project, maintaining the quality and reliability of our data.
 
-### 4. Obtain OMDb API Key
-
-Since OMDb data cannot be redistributed, you need your own API key:
-
-1. Visit: https://www.omdbapi.com/apikey.aspx
-2. Select the **FREE** tier (1,000 daily requests)
-3. Enter your email and activate the key
-4. Create a file named `api_key.txt` in the project root directory
-5. Paste your API key as a single line in this file
-
-**Important:** The key file is protected by `.gitignore` and will not be committed to version control.
-
-See [`API_KEY_INSTRUCTIONS.md`](API_KEY_INSTRUCTIONS.md) for detailed instructions.
-
-### 5. Download Data from Box
-
-To avoid API rate limits, download our processed data from Box:
-
-**Box Link:** [INSERT YOUR BOX LINK HERE]
-
-Download the following folders and place them in your project directory:
-- `data/raw/` → Contains `Netflix_TV_Shows_and_Movies.csv` and `omdb_raw.jsonl`
-- `data/processed/` → Contains all cleaned CSV files
-- `results/` → Contains analysis outputs
-- `figures/` → Contains visualization PNG files
-
-When `omdb_raw.jsonl` is present, the workflow automatically skips API calls and rebuilds processed data from the cached file.
-
-### 6. Run the Complete Workflow
-
-Execute the entire pipeline:
-```bash
-bash run_all.sh
-```
-
-**OR** run Snakemake directly:
-```bash
-python -m snakemake -c 1
-```
-
-This executes all steps in sequence:
-1. Clean Netflix dataset (`01_clean_netflix.py`)
-2. Fetch/rebuild OMDb data (`02_fetch_omdb.py`)
-3. Clean OMDb data (`03_clean_omdb.py`)
-4. Merge datasets (`04_merge.py`)
-5. Generate analysis and visualizations (`05_analyze_and_plot.py`)
-
-### 7. Verify Data Integrity
-
-SHA-256 checksums are computed for raw data files and stored in `results/checksums.txt`. Compare your checksums to verify data integrity:
-```bash
-cat results/checksums.txt
-```
-
-Expected checksums:
-```
-Netflix_TV_Shows_and_Movies.csv: [YOUR_CHECKSUM]
-omdb_raw.jsonl: [YOUR_CHECKSUM]
-```
-
-### 8. View Results
-
-After successful execution, all outputs are available:
-- **Tables:** `results/*.csv`
-- **Visualizations:** `figures/*.png`
-- **Data documentation:** `DATA_DICTIONARY.md`
+After running the workflow, the user can view all outputs directly from the repository: tables in `results/`, plots in `figures/`, and data descriptions in `DATA_DICTIONARY.md`. The entire project can be reproduced using these steps with no manual editing of scripts required, as long as the API key and dependencies are set up.
 
 ---
 
 ## References
 
-Back 2 Viz Basics. (2022). *Netflix TV Shows and Movies* [Dataset]. Data.world. Retrieved from Kaggle: https://www.kaggle.com/datasets/thedevastator/netflix-imdb-scores
+Back 2 Viz Basics. (2022). Netflix TV Shows and Movies [Dataset]. Data.world. Retrieved from Kaggle: https://www.kaggle.com/datasets/thedevastator/netflix-imdb-scores
 
-Creative Commons. (n.d.). *CC BY-NC 4.0 License*. https://creativecommons.org/licenses/by-nc/4.0/
+OMDb API. (n.d.). Open Movie Database [API]. Retrieved from http://www.omdbapi.com
 
-MIT License. (2025). *Project Code License for IS 477 Group Project*.
+TheDevastator. (2022). Netflix IMDb Scores [Kaggle Dataset]. Kaggle. https://www.kaggle.com/datasets/thedevastator/netflix-imdb-scores
 
-OMDb API. (n.d.). *Open Movie Database* [API]. http://www.omdbapi.com
+MIT License. (2025). Project Code License for IS 477 Group Project.
 
-Python Software Foundation. (n.d.). *Python* (Version 3.x) [Programming language]. https://www.python.org
-
-TheDevastator. (2022). *Netflix IMDb Scores* [Kaggle Dataset]. Kaggle. https://www.kaggle.com/datasets/thedevastator/netflix-imdb-scores
-
-**Python Libraries:**
-- McKinney, W. (2010). Data structures for statistical computing in Python. *Proceedings of the 9th Python in Science Conference*, 56-61.
-- Harris, C. R., et al. (2020). Array programming with NumPy. *Nature*, 585(7825), 357-362.
-- Hunter, J. D. (2007). Matplotlib: A 2D graphics environment. *Computing in Science & Engineering*, 9(3), 90-95.
-- Mölder, F., et al. (2021). Sustainable data analysis with Snakemake. *F1000Research*, 10, 33.
-
----
+Creative Commons. (n.d.). CC BY-NC 4.0 License. https://creativecommons.org/licenses/by-nc/4.0/
