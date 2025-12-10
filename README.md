@@ -158,22 +158,24 @@ In general, the largest chance is not even about the study; it is about growing 
 
 ## Reproducing the Work
 
-To reproduce this project, first clone the GitHub repository. Once downloaded, ensure the data structure matches GitHub and what we used during development. The repository contains scripts under the `scripts/` directory, the `data/` folder with `raw/` and `processed/` folders, the Snakefile, the `results/` and `figures/` folders, and the `run_all.sh` script that triggers the entire workflow.
-
+To reproduce this project, first clone the GitHub repository. Once downloaded, ensure the data structure matches GitHub and what we used during development. The repository contains scripts under the scripts/ directory, the data/ folder with raw/ and processed/ folders, the Snakefile, the results/ and figures/ folders, and the run_all.sh script that triggers the entire workflow.
 Install the Python packages using `pip install -r requirements.txt`. We had dependency issues with pulp, so the `requirements.txt` file has the versions used with Snakemake locally. The `requirements_frozen.txt` file is also included, which has the exact versions from when we developed the project.
 
-Since the OMDb data should not be redistributed, obtain your own OMDb API key. Navigate to https://www.omdbapi.com/apikey.aspx and request a free key. Use the key to create a text file named `api_key.txt` in the project root directory and paste the key. The script (`scripts/02_fetch_omdb.py`) searches for possible filenames, including `api_key.txt` (the ideal file name). The key should not be shared to GitHub and is ignored by `.gitignore`.
+Install the Python packages using pip install -r requirements.txt. We had dependency issues with pulp, so the requirements.txt file contains the versions that worked reliably with Snakemake. The requirements_frozen.txt file is also included, which lists the exact package versions from the development environment.
 
-To avoid making new API calls, download our processed data from the shared Box folder: **https://uofi.box.com/s/121cdhn03lrwwi73b2c0ewk2qnmwyick**
+Next, obtain your own OMDb API key. Navigate to https://www.omdbapi.com/apikey.aspx
+ and request a free key. Create a text file named api_key.txt in the project root directory and paste the key into it. The fetching script (scripts/02_fetch_omdb.py) automatically checks for that filename (and a few alternatives). The key should not be committed to GitHub and is already covered in .gitignore.
 
-After downloading, place the raw OMDb JSONL file and the processed CSV files into the appropriate `data/raw/`, `data/processed/`, and `results/` directories. When `omdb_raw.jsonl` is found, the workflow will skip all requests and rebuild the merged data from the cached file. This allows reproducibility even when the API rate limits fetching the same metadata again.
+The intended workflow is simply to run the full pipeline using ./run_all.sh. If an API key is present, the workflow will fetch OMDb data automatically, cache the results in data/raw/omdb_raw.jsonl, and rebuild all downstream files. 
 
-The `./run_all.sh` script activates Snakemake. This command triggers every stage of the pipeline in order. It cleans the original Netflix dataset, then pulls OMDb data if needed, using the `imdb_id`. Next, it cleans the OMDb fields, merges the two datasets on `imdb_id`, performs quality checks, computes missing value statistics, and generates all tables and visualizations used in the analysis. Outputs are stored in the `results/` and `figures/` folders. This includes summary stats, correlation matrices, and plots.
 
-We also computed the SHA-256 checksums. This is done to the raw files and then writes them to `results/checksums.txt`. This is to confirm that the raw data matches the version used in our project, maintaining the quality and reliability of our data.
+However, if you prefer to avoid making new API calls, you may download our cached data from the shared Box folder:
+https://uofi.box.com/s/121cdhn03lrwwi73b2c0ewk2qnmwyick
 
-After running the workflow, the user can view all outputs directly from the repository: tables in `results/`, plots in `figures/`, and data descriptions in `DATA_DICTIONARY.md`. The entire project can be reproduced using these steps with no manual editing of scripts required, as long as the API key and dependencies are set up.
+If these files are placed in data/raw/, data/processed/, and results/ using the existing structure, the workflow will detect omdb_raw.jsonl and skip all API requests, rebuilding the cleaned and merged outputs directly from the cached data. 
+We also computed the SHA-256 checksums. This is done to the raw files and then writes them to `results/checksums.txt`. 
 
+The ./run_all.sh script activates Snakemake and triggers every stage of the pipeline in order. It cleans the original Netflix dataset, pulls OMDb data if needed, parses and standardizes OMDb fields, merges the two datasets on imdb_id, performs quality checks, computes missing-value statistics, and generates all tables and visualizations used in the analysis. Outputs are stored in the results/ and figures/ folders, including summary statistics, correlation matrices, and plots
 ---
 
 ## References
